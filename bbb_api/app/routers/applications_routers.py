@@ -1,27 +1,53 @@
+from typing import List
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.database.session import get_db
+from app.schemas.answer_schema import AnswerSchema
 from app.schemas.application_schema import ApplicationSchema, ApplicationCreateSchema, ApplicationUpdateSchema
 from app.services.application_service import ApplicationService
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/applications",
+    tags=["Inscrições"],
+)
 
 
-# Rota para criar uma inscrição
-@router.post("/applications", response_model=ApplicationSchema, tags=["applications"])
-def create_application(application: ApplicationCreateSchema, db: Session = Depends(get_db)):
+@router.post(
+    "/",
+    response_model=ApplicationSchema,
+    name="Criar inscrição",
+    description="Rota para criar uma inscrição"
+)
+async def create_application(application: ApplicationCreateSchema, db: Session = Depends(get_db)) -> ApplicationSchema:
     return ApplicationService(db).create(application=application)
 
 
-# Rota para atualizar uma inscrição
-@router.put("/applications/{application_id}", response_model=ApplicationSchema, tags=["applications"])
-def update_candidate(application_id: int, application: ApplicationUpdateSchema, db: Session = Depends(get_db)):
+@router.put(
+    "/{application_id}",
+    response_model=ApplicationSchema,
+    name="Atualizar inscrição",
+    description="Rota para atualizar uma inscrição"
+)
+async def update_candidate(application_id: int, application: ApplicationUpdateSchema, db: Session = Depends(get_db)) -> ApplicationSchema:
     return ApplicationService(db).update(application_id=application_id, application=application)
 
 
-# Rota para deletar uma inscrição
-@router.delete("/applications/{application_id}", tags=["applications"])
-def delete_candidate(application_id: int, db: Session = Depends(get_db)):
+@router.delete(
+    "/{application_id}",
+    name="Remover inscrição",
+    description="Rota para deletar uma inscrição"
+)
+async def delete_candidate(application_id: int, db: Session = Depends(get_db) ):
     return ApplicationService(db).delete(application_id=application_id)
 
+
+@router.get(
+    "/{application_id}/answers",
+    response_model=List[AnswerSchema],
+    name="Respostas por inscrição",
+    description="Rota para retornar todas as respostas de uma inscrição"
+)
+async def read_answer_by_application(application_id: int, db: Session = Depends(get_db)) -> List[AnswerSchema]:
+    return ApplicationService(db).get_answers(application_id=application_id)

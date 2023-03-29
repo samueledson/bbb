@@ -1,5 +1,8 @@
 from enum import Enum
 
 
-class ProgramSeason(Enum):
-    BBB_24 = '24'
+class PS_ProgramSeason(Enum):
+    """
+    Enumeração para as temporadas do programa.
+    """
+    BBB24 = 'BBB24'  # Temporada 24 do programa "Big Brother Brasil"

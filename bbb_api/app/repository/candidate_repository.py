@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import List
+
+from sqlalchemy import and_
 from sqlalchemy.orm import Session
 
 from app.database.models.candidate_model import CandidateModel
@@ -16,8 +18,8 @@ class CandidateRepository:
     def get_by_id(self, candidate_id: int) -> CandidateModel:
         return self.db.query(CandidateModel).filter(CandidateModel.id == candidate_id, CandidateModel.deleted_at.is_(None)).first()
 
-    def get_by_cpf_or_email(self, cpf: str, email: str):
-        return self.db.query(CandidateModel).filter((CandidateModel.cpf == cpf or CandidateModel.email == email), CandidateModel.deleted_at.is_(None)).first()
+    def get_by_cpf_or_email(self, cpf: str, email: str) -> CandidateModel:
+        return self.db.query(CandidateModel).filter(CandidateModel.deleted_at.is_(None), and_(CandidateModel.cpf == cpf, CandidateModel.email == email)).first()
 
     def create(self, candidate: CandidateCreateSchema) -> CandidateModel:
         db_candidate = CandidateModel(**candidate.dict())
@@ -27,20 +29,20 @@ class CandidateRepository:
         return db_candidate
 
     def update(self, candidate_id: int, candidate: CandidateUpdateSchema) -> CandidateModel | None:
-        db_candidate = self.get_by_id(candidate_id)
-        if db_candidate:
+        candidate_record = self.get_by_id(candidate_id)
+        if candidate_record:
             for key, value in candidate.dict(exclude_unset=True).items():
-                setattr(db_candidate, key, value)
+                setattr(candidate_record, key, value)
             self.db.commit()
-            self.db.refresh(db_candidate)
-            return db_candidate
+            self.db.refresh(candidate_record)
+            return candidate_record
         else:
             return None
 
     def soft_delete(self, candidate_id: int) -> None:
-        db_candidate = self.get_by_id(candidate_id)
-        if db_candidate:
-            db_candidate.deleted_at = datetime.now()
+        candidate_record = self.get_by_id(candidate_id)
+        if candidate_record:
+            candidate_record.deleted_at = datetime.now()
             self.db.commit()
-            self.db.refresh(db_candidate)
+            self.db.refresh(candidate_record)
 

@@ -1,5 +1,16 @@
+import os
+
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 
-SQLALCHEMY_DATABASE_URL = "mysql://root:123456@localhost:3306/bbb"
+load_dotenv()
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL")
+
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL,
+    echo=True,
+    pool_pre_ping=True,
+    pool_size=10,
+    max_overflow=20
+)

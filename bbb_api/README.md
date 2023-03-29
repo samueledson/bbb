@@ -1,82 +1,84 @@
-# BBB
-
-API REST para o sistema de inscrições do BBB feita em Python.
+# BBB API
+A BBB API é uma aplicação REST para o sistema de inscrições do Big Brother Brasil, desenvolvida em Python.
 
 ## Recursos
+- CRUD de candidatos e inscrições
 
-- CRUD de usuários e inscrições
+## Como instalar e executar
+### Pré-requisitos
+- Python 3.11
+- Docker (opcional)
 
-## Como instalar
-
-1. Certifique-se de ter o Python 3.11 instalado em sua máquina.
-2. Clone o repositório:
+### Instalação local
+1. Clone o repositório:
     ```
     git clone https://github.com/samueledson/bbb_api.git
     ```
-3. Navegue para o diretório do projeto:
+2. Navegue para o diretório do projeto:
     ```
     cd bbb_api
     ```
-4. Crie um ambiente virtual:
+3. Crie e ative um ambiente virtual:
    - Linux:
     ```
     python3 -m venv venv
-    ```
-   - Windows:
-    ```
-    python -m venv venv
-    ```
-5. Ative o ambiente virtual:
-   - Linux:
-    ```
     source venv/bin/activate
     ```
    - Windows:
     ```
-    .\venv\bin\activate
+    python -m venv venv
+    .\venv\Scripts\activate
     ```
-6. Instale as dependências:
+4. Instale as dependências:
     ```
     pip install -r requirements.txt
     ```
-7. Após a instalação, execute o comando para iniciar a aplicação:
+5. Inicie a aplicação:
     ```
-    python app/main.py
+    python -m uvicorn app.main:app
     ```
-8. Acesse a aplicação
+6. Acesse a aplicação em seu navegador
     ```
     http://localhost:8000
     ```
-9. Acesse a documentação da API
+7. Acesse a documentação da API em seu navegador
     ```
     http://localhost:8000/docs
     ```
 
 ## Instalação com Docker
-
-1. Certifique-se de ter o Docker instalado em sua máquina.
-2. Clone o repositório:
+1. Clone o repositório:
     ```
-    git clone
-   ```
-3. Navegue para o diretório do projeto:
+    git clone https://github.com/samueledson/bbb_api.git
+    ```
+2. Navegue para o diretório do projeto:
     ```
     cd bbb_api
     ```
-4. Execute o comando para iniciar a aplicação:
+3. Execute o comando para construir a imagem e criar o container no Docker:
     ```
-    docker build -t bbbimage .
+    docker compose up
     ```
-5. Inicie o container:
-    ```
-    docker run -d --name bbbcontainer -p 8000:8000 bbbimage
-    ```
-6. Acesse a aplicação
+4. Acesse a aplicação em seu navegador
     ```
     http://localhost:8000
     ```
-7. Acesse a documentação da API
+5. Acesse a documentação da API em seu navegador:
     ```
     http://localhost:8000/docs
     ```
 
+## Como executar os testes
+
+1. Execute o comando para executar os testes unitários e de integração:
+    ```
+    pytest
+    ```
+   
+## Observações
+
+- A aplicação está configurada para utilizar um banco de dados MySQL, que é criado automaticamente com o Docker Compose.
+Caso queira utilizar outro banco de dados, basta alterar a variável de ambiente `DATABASE_URL` no arquivo `.env` para o endereço do banco de dados desejado e executar as querys do arquivo `setup.sql`
+- Para encerrar a aplicação em ambas as formas de instalação, utilize o atalho CTRL+C no terminal ou pare o container do Docker.
+- Para encerrar o ambiente virtual, utilize o comando `deactivate`.
+- Para remover o ambiente virtual, exclua a pasta `venv`.
