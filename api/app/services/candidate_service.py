@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND, HTTP_500_INTERNAL_SERVER_ERROR, \
@@ -15,6 +16,10 @@ class CandidateService:
     def __init__(self, db: Session):
         self.db = db
         self.repository = CandidateRepository(db)
+
+    def get_all(self, skip: int = None, limit: int = None) -> List[CandidateModel]:
+        all_candidates_record = self.repository.get_all(skip=skip, limit=limit)
+        return all_candidates_record
 
     def get_one(self, candidate_id: int) -> CandidateModel:
         self.validate_candidate(candidate_id)

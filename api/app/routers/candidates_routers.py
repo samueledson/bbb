@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
@@ -15,6 +15,18 @@ router = APIRouter(
     prefix="/candidates",
     tags=["Candidatos"]
 )
+
+
+@router.get(
+    "/",
+    response_model=List[CandidateSchema],
+    name="Obter lista de candidatos",
+    description="Rota para obter a listagem com todos os candidatos"
+)
+async def read_candidates(skip: int = None, limit: int = None, db: Session = Depends(get_db)) -> List[CandidateSchema]:
+    candidate_service = CandidateService(db)
+    all_candidates = candidate_service.get_all(skip=skip, limit=limit)
+    return all_candidates
 
 
 @router.get(

@@ -12,8 +12,8 @@ class CandidateRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    # def get_all(self, skip: int = 0, limit: int = 100) -> List[CandidateModel]:
-    #     return self.db.query(CandidateModel).filter(CandidateModel.deleted_at.is_(None)).offset(skip).limit(limit).all()
+    def get_all(self, skip: int = 0, limit: int = 100) -> List[CandidateModel]:
+        return self.db.query(CandidateModel).filter(CandidateModel.deleted_at.is_(None)).offset(skip).limit(limit).all()
 
     def get_by_id(self, candidate_id: int) -> CandidateModel:
         return self.db.query(CandidateModel).filter(CandidateModel.id == candidate_id, CandidateModel.deleted_at.is_(None)).first()
