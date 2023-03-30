@@ -12,7 +12,7 @@ A BBB API é uma aplicação REST para o sistema de inscrições do Big Brother 
 ## Instalação com Docker
 1. Clone o repositório:
     ```
-    git clone https://github.com/samueledson/bbb_api.git
+    git clone https://github.com/samueledson/bbb.git
     ```
 2. Navegue para o diretório do projeto:
     ```
@@ -42,7 +42,7 @@ A BBB API é uma aplicação REST para o sistema de inscrições do Big Brother 
 ### Instalação local
 1. Clone o repositório:
     ```
-    git clone https://github.com/samueledson/bbb_api.git
+    git clone https://github.com/samueledson/bbb.git
     ```
 2. Navegue para o diretório do projeto:
     ```
