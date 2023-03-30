@@ -30,6 +30,14 @@ A BBB API é uma aplicação REST para o sistema de inscrições do Big Brother 
     ```
     http://localhost:8000/docs
     ```
+6. É possivel fazer acesso ao banco de dados:
+    ```
+    Host: localhost
+    Porta: 33061
+    Usuário: root
+    Senha: 123456
+    Banco de dados: bbb
+    ```
 
 ### Instalação local
 1. Clone o repositório:
@@ -40,7 +48,7 @@ A BBB API é uma aplicação REST para o sistema de inscrições do Big Brother 
     ```
     cd api
     ```
-3. Crie e ative um ambiente virtual:
+3. Crie e ative um ambiente virtual para a API:
    - Linux:
     ```
     python3 -m venv venv
@@ -55,18 +63,26 @@ A BBB API é uma aplicação REST para o sistema de inscrições do Big Brother 
     ```
     pip install -r requirements.txt
     ```
+5. Crie um banco de dados MySQL e altere os dados de conexão que estão no arquivo:
+    ```
+    api/.env
+    ```  
+6. Execute o arquivo de criação e carga do banco de dados:
+    ```
+    api/setup.sql
+    ```  
 5. Inicie a aplicação:
     ```
     python -m uvicorn app.main:app
     ```
-6. Acesse a aplicação front-end em seu navegador
-    ```
-    http://localhost:4200
-    ```
-7. Acesse a documentação da API em seu navegador
+6. Acesse a documentação da API em seu navegador
     ```
     http://localhost:8000/docs
     ```
+7. Para acessar o front-end sirva os arquivos que estão dentro da pasta:
+    ```
+    frontend/dist/bbb_frontend
+    ```   
 
 ## Como executar os testes
 
@@ -78,7 +94,7 @@ A BBB API é uma aplicação REST para o sistema de inscrições do Big Brother 
 ## Observações
 
 - A aplicação está configurada para utilizar um banco de dados MySQL, que é criado automaticamente com o Docker Compose.
-Caso queira utilizar outro banco de dados, basta alterar a variável de ambiente `DATABASE_URL` no arquivo `.env` para o endereço do banco de dados desejado e executar as querys do arquivo `setup.sql`
+Caso queira utilizar outro banco de dados, basta alterar a variável de ambiente `DATABASE_URL` no arquivo `api/.env` para o endereço do banco de dados desejado e executar as querys do arquivo `api/setup.sql`
 - Para encerrar a aplicação em ambas as formas de instalação, utilize o atalho CTRL+C no terminal ou pare o container do Docker.
-- Para encerrar o ambiente virtual, utilize o comando `deactivate`.
-- Para remover o ambiente virtual, exclua a pasta `venv`.
+- Para encerrar o ambiente virtual, utilize o comando `source venv/bin/deactivate` para Linux ou `api\venv\Scripts\deactivate` para Windows.
+- Para remover o ambiente virtual, exclua a pasta `api/venv`.
