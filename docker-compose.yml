@@ -1,0 +1,49 @@
+version: '3'
+services:
+  web:
+    container_name: container-bbb-nginx
+    image: nginx
+    ports:
+      - "4200:80"
+    volumes:
+      - ./frontend/dist/bbb_frontend:/usr/share/nginx/html
+    networks:
+      - network-bbb-bridge  
+    restart: on-failure   
+
+  db:
+    container_name: container-bbb-mysql
+    image: mysql
+    volumes:
+      - ./api/setup.sql:/docker-entrypoint-initdb.d/setup.sql
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456"
+    ports:
+      - "33061:3306"
+    networks:
+      - network-bbb-bridge
+    command: --default-authentication-plugin=mysql_native_password
+    restart: on-failure
+
+  api:
+    container_name: container-bbb-python
+    image: python:slim
+    links:
+      - db
+    depends_on:
+      - db
+    working_dir: /api
+    volumes:
+      - ./api/requirements.txt:/api/requirements.txt
+      - ./api/.env:/api/.env
+      - ./api/app:/api/app
+    networks:
+      - network-bbb-bridge
+    ports:
+      - "8000:8000"
+    command: bash -c "pip install --no-cache-dir -r /api/requirements.txt && python3 -m uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    restart: on-failure
+
+networks:
+  network-bbb-bridge:
+    driver: bridge

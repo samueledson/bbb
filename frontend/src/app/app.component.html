@@ -1,0 +1,217 @@
+<mat-card class="form-card">
+  <mat-card-header>
+    <div mat-card-avatar class="form-card__header-image"></div>
+    <mat-card-title>Faça sua inscrição para o BBB 24</mat-card-title>
+    <mat-card-subtitle>Fique ligado, pois as vagas são limitadas</mat-card-subtitle>
+  </mat-card-header>
+  <img mat-card-image src="assets/cover.png" alt="Imagem de capa">
+  <mat-card-content>
+    <mat-stepper orientation="vertical" [linear]="isLinear" #stepper>
+
+      <mat-step [stepControl]="loginFormGroup">
+        <form [formGroup]="loginFormGroup">
+
+          <ng-template matStepLabel>Faça login ou cadastre-se</ng-template>
+
+          <div class="form-grid">
+            <mat-form-field class="form-field">
+              <mat-label>CPF</mat-label>
+              <input matInput formControlName="cpf" required minlength="11" maxlength="11" />
+            </mat-form-field>
+            <mat-form-field class="form-field">
+              <mat-label>Senha</mat-label>
+              <input matInput formControlName="password" type="password" required />
+            </mat-form-field>
+          </div>
+
+          <div class="form-buttons">
+            <button *ngIf="!candidate?.id" mat-raised-button (click)="login()" [disabled]="loginFormGroup.invalid" color="primary">Entrar</button>
+            <button *ngIf="candidate?.id" mat-button (click)="deleteCandidate()" color="warn">Remover cadastro</button>
+            <button *ngIf="candidate?.id" mat-raised-button (click)="logout()">Sair</button>
+            <button *ngIf="candidate?.id" mat-raised-button matStepperNext>Próximo</button>
+          </div>
+
+        </form>
+      </mat-step>
+
+      <mat-step [stepControl]="infoFormGroup">
+        <form [formGroup]="infoFormGroup">
+
+          <ng-template matStepLabel>Informações adicionais de cadastro</ng-template>
+
+          <div class="form-grid">
+            <mat-form-field class="form-field">
+              <mat-label>Nome completo</mat-label>
+              <input matInput formControlName="full_name" required />
+            </mat-form-field>
+            <mat-form-field class="form-field">
+              <mat-label>E-mail</mat-label>
+              <input matInput formControlName="email" required />
+            </mat-form-field>
+          </div>
+
+          <div class="form-grid">
+            <mat-form-field class="form-field">
+              <mat-label>Nome do pai</mat-label>
+              <input matInput formControlName="father_name" />
+            </mat-form-field>
+            <mat-form-field class="form-field">
+              <mat-label>Nome da mãe</mat-label>
+              <input matInput formControlName="mother_name" />
+            </mat-form-field>
+          </div>
+
+          <div class="form-grid">
+            <mat-form-field class="form-field">
+              <mat-label>Idade</mat-label>
+              <input matInput formControlName="age" type="number" step="1" pattern="^-?\d+$" />
+            </mat-form-field>
+            <mat-form-field class="form-field">
+              <mat-label>Sexo</mat-label>
+              <mat-select formControlName="gender">
+                <mat-option value="M">Masculino</mat-option>
+                <mat-option value="F">Feminino</mat-option>
+                <mat-option value="OUTRO">Outro</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="form-grid">
+            <mat-form-field class="form-field">
+              <mat-label>Telefone</mat-label>
+              <input matInput formControlName="phone" required />
+            </mat-form-field>
+            <mat-form-field class="form-field">
+              <mat-label>Religião</mat-label>
+              <input matInput formControlName="religion" />
+            </mat-form-field>
+          </div>
+
+          <div class="form-buttons">
+            <button mat-raised-button matStepperPrevious>Voltar</button>
+            <button *ngIf="infoFormGroup.disabled || (infoFormGroup.invalid || !infoFormGroup.dirty)" mat-raised-button matStepperNext>Próximo</button>
+            <button *ngIf="!infoFormGroup.disabled" mat-raised-button (click)="createOrUpdateCandidate()" [disabled]="infoFormGroup.invalid || !infoFormGroup.dirty" color="primary">{{candidate ? 'Atualizar cadastro' : 'Criar cadastro inicial'}}</button>
+          </div>
+
+        </form>
+      </mat-step>
+
+      <mat-step [stepControl]="regionFormGroup">
+        <form [formGroup]="regionFormGroup">
+
+          <ng-template matStepLabel>Região da inscrição</ng-template>
+
+          <div class="form-grid">
+            <mat-radio-group formControlName="country_region" class="form-field-radio">
+              <mat-radio-button class="form-field-radio__button" value="CENTROOESTE">Centro-Oeste</mat-radio-button>
+              <mat-radio-button class="form-field-radio__button" value="NORDESTE">Nordeste</mat-radio-button>
+              <mat-radio-button class="form-field-radio__button" value="NORTE">Norte</mat-radio-button>
+              <mat-radio-button class="form-field-radio__button" value="SUDESTE">Suldeste</mat-radio-button>
+              <mat-radio-button class="form-field-radio__button" value="SUL">Sul</mat-radio-button>
+            </mat-radio-group>
+
+          </div>
+
+          <div class="form-buttons">
+            <button mat-raised-button matStepperPrevious>Voltar</button>
+            <button mat-raised-button (click)="createOrUpdateApplication()">Próximo</button>
+          </div>
+
+        </form>
+      </mat-step>
+
+      <ng-container *ngIf="groupedQuestions">
+        <ng-container *ngFor="let formSection of groupedQuestions">
+          <mat-step [stepControl]="sectionsFormGroup.get(formSection.section)!">
+            <form [formGroup]="sectionsFormGroup">
+              <div [formGroupName]="formSection.section">
+
+                <ng-template matStepLabel>Seção: {{formSection.title}}</ng-template>
+
+                <ng-container *ngFor="let question of formSection.questions">
+                  <div class="form-grid">
+                    <mat-form-field class="form-field">
+                      <mat-label>{{question.question_text}}</mat-label>
+                      <textarea matInput [formControlName]="question.id"></textarea>
+                    </mat-form-field>
+                  </div>
+                </ng-container>
+
+                <div class="form-buttons">
+                  <button mat-raised-button matStepperPrevious>Voltar</button>
+                  <button mat-raised-button (click)="createOrUpdateAnswers()">Próximo</button>
+                </div>
+              </div>
+            </form>
+          </mat-step>
+        </ng-container>
+      </ng-container>
+
+      <mat-step [stepControl]="midiaFormGroup">
+        <form [formGroup]="midiaFormGroup">
+
+          <ng-template matStepLabel>Videos e Fotos</ng-template>
+
+          <div class="form-grid">
+            <mat-form-field class="form-field">
+              <mat-label>Vídeo</mat-label>
+              <input matInput formControlName="video_url" />
+            </mat-form-field>
+            <mat-form-field class="form-field">
+              <mat-label>Foto 1</mat-label>
+              <input matInput formControlName="photo1_url" />
+            </mat-form-field>
+          </div>
+
+          <div class="form-grid">
+            <mat-form-field class="form-field">
+              <mat-label>Foto 2</mat-label>
+              <input matInput formControlName="photo2_url" />
+            </mat-form-field>
+            <mat-form-field class="form-field">
+              <mat-label>Foto 3</mat-label>
+              <input matInput formControlName="photo3_url" />
+            </mat-form-field>
+          </div>
+
+          <div class="form-buttons">
+            <button mat-raised-button matStepperPrevious>Voltar</button>
+            <button mat-raised-button (click)="createOrUpdateApplication()">Próximo</button>
+          </div>
+        </form>
+      </mat-step>
+
+      <mat-step>
+        <ng-template matStepLabel>Conclusão</ng-template>
+        <div class="form-grid">
+          <ng-container *ngIf="application?.status === 'PENDENTE'">
+            <div class="form-buttons">
+              <button mat-button matStepperPrevious>Voltar</button>
+              <button mat-raised-button (click)="finalizeApplication()" color="primary">Entregar inscrição</button>
+            </div>
+            <p><i><small>* Ao entregar sua inscrição, você nao poderá editar novamente as informações.</small></i></p>
+          </ng-container>
+          <ng-container *ngIf="application?.status === 'ENTREGUE'">
+            <div style="display: flex; flex-direction: column;">
+              <p>
+                <strong>Sua inscrição foi entregue com sucesso!</strong>
+              </p>
+              <p>
+                <i><small>Caso seja selecionado para as seletivas, fique atento pois entraremos em contato por e-mail.</small></i>
+              </p>
+              <div class="form-buttons">
+                <button mat-button (click)="deleteApplication()" color="warn">Remover inscrição</button>
+                <button mat-raised-button (click)="logout()">Sair</button>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </mat-step>
+
+    </mat-stepper>
+  </mat-card-content>
+</mat-card>
+
+<div class="footer">
+</div>
+
