@@ -16,7 +16,7 @@ A BBB API é uma aplicação REST para o sistema de inscrições do Big Brother 
     ```
 2. Navegue para o diretório do projeto:
     ```
-    cd api
+    cd bbb
     ```
 3. Execute o comando para construir a imagem e criar o container no Docker:
     ```
@@ -46,7 +46,7 @@ A BBB API é uma aplicação REST para o sistema de inscrições do Big Brother 
     ```
 2. Navegue para o diretório do projeto:
     ```
-    cd api
+    cd bbb/api
     ```
 3. Crie e ative um ambiente virtual para a API:
    - Linux:
@@ -65,13 +65,13 @@ A BBB API é uma aplicação REST para o sistema de inscrições do Big Brother 
     ```
 5. Crie um banco de dados MySQL e altere os dados de conexão que estão no arquivo:
     ```
-    api/.env
+    bbb/api/.env
     ```  
 6. Execute o arquivo de criação e carga do banco de dados:
     ```
-    api/setup.sql
+    bbb/api/setup.sql
     ```  
-5. Inicie a aplicação:
+5. Inicie a API na pasta bbb/api:
     ```
     python -m uvicorn app.main:app
     ```
@@ -86,7 +86,7 @@ A BBB API é uma aplicação REST para o sistema de inscrições do Big Brother 
 
 ## Como executar os testes
 
-1. Execute o comando para executar os testes unitários e de integração:
+1. Execute o comando para executar os testes unitários e de integração na pasta bbb/api:
     ```
     pytest
     ```
@@ -94,7 +94,7 @@ A BBB API é uma aplicação REST para o sistema de inscrições do Big Brother 
 ## Observações
 
 - A aplicação está configurada para utilizar um banco de dados MySQL, que é criado automaticamente com o Docker Compose.
-Caso queira utilizar outro banco de dados, basta alterar a variável de ambiente `DATABASE_URL` no arquivo `api/.env` para o endereço do banco de dados desejado e executar as querys do arquivo `api/setup.sql`
+Caso queira utilizar outro banco de dados, basta alterar a variável de ambiente `DATABASE_URL` no arquivo `bbb/api/.env` para o endereço do banco de dados desejado e executar as querys do arquivo `bbb/api/setup.sql`
 - Para encerrar a aplicação em ambas as formas de instalação, utilize o atalho CTRL+C no terminal ou pare o container do Docker.
-- Para encerrar o ambiente virtual, utilize o comando `source venv/bin/deactivate` para Linux ou `api\venv\Scripts\deactivate` para Windows.
-- Para remover o ambiente virtual, exclua a pasta `api/venv`.
+- Para encerrar o ambiente virtual, utilize o comando `source venv/bin/deactivate` para Linux ou `api\venv\Scripts\deactivate` para Windows dentro do diretório da API.
+- Para remover o ambiente virtual, exclua a pasta `bbb/api/venv`.
